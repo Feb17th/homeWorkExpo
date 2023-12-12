@@ -83,6 +83,7 @@ export const MainNavigator = () => {
         component={Settings}
         options={{
           title: "Cài đặt",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

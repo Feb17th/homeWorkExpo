@@ -6,12 +6,9 @@ import { store, persistor } from "@/Store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ApplicationNavigator } from "./Navigation";
-import {
-  MD3LightTheme as DefaultTheme,
-  MD3DarkTheme,
-  PaperProvider,
-} from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import { useColorScheme } from "react-native";
+import { DarkTheme, LightTheme } from "./Theme/theme";
 
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
@@ -24,9 +21,7 @@ export default function App() {
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <PaperProvider
-            theme={scheme === "dark" ? MD3DarkTheme : DefaultTheme}
-          >
+          <PaperProvider theme={scheme === "dark" ? DarkTheme : LightTheme}>
             <ApplicationNavigator />
           </PaperProvider>
         </PersistGate>
