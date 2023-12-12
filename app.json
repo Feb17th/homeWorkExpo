@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hpcc.expo-redux-template"
@@ -32,10 +30,6 @@
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
-    "extra": {
-      "eas": {
-        "projectId": "cb76e94d-bbb7-4b6b-a16c-7d5f5d3a96da"
-      }
-    }
+    "extra": {}
   }
 }
