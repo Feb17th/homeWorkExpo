@@ -12,8 +12,6 @@ import { MyProfile } from "@/Screens/MyProfile/MyProfile";
 import { Settings } from "@/Screens/Settings/Settings";
 import { Save } from "@/Screens/Save/Save";
 import { History } from "@/Screens/History/History";
-import { Login } from "@/Screens/Login/Login";
-import { Signup } from "@/Screens/Signup/Signup";
 
 const Tab = createBottomTabNavigator();
 type IoniconsNames = any;

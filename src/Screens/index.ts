@@ -1,7 +1,8 @@
 export enum RootScreens {
   MAIN = "Main",
   ONBOARDING = "Onboarding",
-  AUTHENTICATION = "Authentication",
+  LOGIN = "Login",
+  SIGNUP = "Signup",
   EDIT_PROFILE = "EditProfile",
-  MY_PROFILE = "MyProfile",
+  CHANGE_PASSWORD = "ChangePassword",
 }

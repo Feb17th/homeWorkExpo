@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Avatar } from "native-base";
 import { Input, Icon, Pressable, Button } from "native-base";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { RootScreens } from "@/Screens";
 import { RootStackParamList } from "@/Navigation";
@@ -24,6 +24,33 @@ export const Profile = ({ edit }: ProfileProps) => {
             backgroundColor: "#6DB5CA",
           }}
         >
+          <View
+            style={{
+              position: "absolute",
+              flexDirection: "row",
+              alignItems: "center",
+              top: 20,
+              left: 10,
+              gap: 8,
+            }}
+          >
+            {edit && (
+              <>
+                <Ionicons
+                  name="arrow-back"
+                  size={25}
+                  color="#fff"
+                  onPress={() => {
+                    navigate("MyProfile");
+                  }}
+                />
+                <Text style={{ color: "#fff", fontSize: 20 }}>
+                  Chỉnh sửa thông tin cá nhân
+                </Text>
+              </>
+            )}
+          </View>
+
           <View style={{ alignItems: "center", gap: 10 }}>
             <Avatar
               bg="green.500"
@@ -52,7 +79,7 @@ export const Profile = ({ edit }: ProfileProps) => {
             )}
           </View>
         </View>
-        <View style={{ paddingHorizontal: 20, marginTop: 150, gap: 20 }}>
+        <View style={{ paddingHorizontal: 20, marginTop: 120, gap: 20 }}>
           <View style={{ gap: 8 }}>
             <Text style={{ fontWeight: "bold" }}>Họ và tên</Text>
             <Input

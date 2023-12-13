@@ -7,13 +7,16 @@ import { WelcomeContainer } from "@/Screens/Welcome";
 import { Login } from "@/Screens/Login/Login";
 import { RootScreens } from "@/Screens";
 import { EditProfile } from "@/Screens/MyProfile/EditProfile";
+import { Signup } from "@/Screens/Signup/Signup";
+import { ChangePassword } from "@/Screens/MyProfile/ChangePassword";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: undefined;
   [RootScreens.ONBOARDING]: undefined;
-  [RootScreens.AUTHENTICATION]: undefined;
+  [RootScreens.LOGIN]: undefined;
+  [RootScreens.SIGNUP]: undefined;
   [RootScreens.EDIT_PROFILE]: undefined;
-  [RootScreens.MY_PROFILE]: undefined;
+  [RootScreens.CHANGE_PASSWORD]: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -37,13 +40,22 @@ const ApplicationNavigator = () => {
           options={{}}
         />
         <RootStack.Screen
-          name={RootScreens.AUTHENTICATION}
+          name={RootScreens.LOGIN}
           component={Login}
+          options={{}}
+        />
+        <RootStack.Screen
+          name={RootScreens.SIGNUP}
+          component={Signup}
           options={{}}
         />
         <RootStack.Screen
           name={RootScreens.EDIT_PROFILE}
           component={EditProfile}
+        />
+        <RootStack.Screen
+          name={RootScreens.CHANGE_PASSWORD}
+          component={ChangePassword}
         />
       </RootStack.Navigator>
     </NavigationContainer>

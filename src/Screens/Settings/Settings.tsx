@@ -92,7 +92,7 @@ export const Settings = () => {
           </View>
           <TouchableOpacity
             style={styles.itemSetting}
-            onPress={() => navigate(RootScreens.MY_PROFILE)}
+            onPress={() => navigate("MyProfile")}
           >
             <Text style={styles.textColor}>Chỉnh sửa thông tin cá nhân </Text>
             <MaterialIcons
@@ -101,14 +101,17 @@ export const Settings = () => {
               style={styles.textColor}
             />
           </TouchableOpacity>
-          <View style={styles.itemSetting}>
+          <TouchableOpacity
+            style={styles.itemSetting}
+            onPress={() => navigate("ChangePassword")}
+          >
             <Text style={styles.textColor}>Thay đổi mật khẩu</Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={24}
               style={styles.textColor}
             />
-          </View>
+          </TouchableOpacity>
           <View style={styles.itemSetting}>
             <Text style={styles.textColor}>Ngôn ngữ</Text>
             <MaterialIcons
@@ -144,7 +147,7 @@ export const Settings = () => {
           <TouchableOpacity
             style={styles.itemSetting}
             onPress={() => {
-              navigate(RootScreens.AUTHENTICATION);
+              navigate(RootScreens.LOGIN);
             }}
           >
             <Text style={styles.textColor}>Đăng xuất</Text>

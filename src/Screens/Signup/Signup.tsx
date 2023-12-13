@@ -1,13 +1,18 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { Input, Icon, Pressable, Button } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RootStackParamList } from "@/Navigation";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootScreens } from "@/Screens";
+import { useNavigation } from "@react-navigation/native";
 
 export const Signup = () => {
   const [show, setShow] = React.useState(false);
   const [show2, setShow2] = React.useState(false);
+  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ backgroundColor: "#101010", flex: 1, gap: 50 }}>
@@ -119,11 +124,15 @@ export const Signup = () => {
             Đăng ký
           </Button>
           <View style={{ alignItems: "center" }}>
-            <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigate(RootScreens.LOGIN);
+              }}
+            >
               <Text style={{ color: "#A4A4A4", backgroundColor: "#101010" }}>
                 Đã có tài khoản?
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
