@@ -1,12 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme, Divider, Switch } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { FontSize } from "@/Theme/Variables";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "@/Navigation";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootScreens } from "@/Screens";
 
 export const Settings = () => {
   const theme = useTheme();
+
+  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const styles = StyleSheet.create({
     itemSetting: {
@@ -84,14 +90,17 @@ export const Settings = () => {
           <View>
             <Text style={{ color: "#ADADAD" }}>Cài đặt tài khoản</Text>
           </View>
-          <View style={styles.itemSetting}>
+          <TouchableOpacity
+            style={styles.itemSetting}
+            onPress={() => navigate(RootScreens.MY_PROFILE)}
+          >
             <Text style={styles.textColor}>Chỉnh sửa thông tin cá nhân </Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={24}
               style={styles.textColor}
             />
-          </View>
+          </TouchableOpacity>
           <View style={styles.itemSetting}>
             <Text style={styles.textColor}>Thay đổi mật khẩu</Text>
             <MaterialIcons
@@ -132,14 +141,19 @@ export const Settings = () => {
               style={styles.textColor}
             />
           </View>
-          <View style={styles.itemSetting}>
+          <TouchableOpacity
+            style={styles.itemSetting}
+            onPress={() => {
+              navigate(RootScreens.AUTHENTICATION);
+            }}
+          >
             <Text style={styles.textColor}>Đăng xuất</Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={24}
               style={styles.textColor}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

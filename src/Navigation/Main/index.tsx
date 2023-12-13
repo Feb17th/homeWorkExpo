@@ -12,6 +12,8 @@ import { MyProfile } from "@/Screens/MyProfile/MyProfile";
 import { Settings } from "@/Screens/Settings/Settings";
 import { Save } from "@/Screens/Save/Save";
 import { History } from "@/Screens/History/History";
+import { Login } from "@/Screens/Login/Login";
+import { Signup } from "@/Screens/Signup/Signup";
 
 const Tab = createBottomTabNavigator();
 type IoniconsNames = any;
@@ -44,8 +46,6 @@ export const MainNavigator = () => {
               return <Ionicons name={iconName} size={size} color={color} />;
           }
         },
-        tabBarStyle: { position: "absolute" },
-
         tabBarActiveTintColor: "green",
         tabBarInactiveTintColor: "gray",
       })}
@@ -76,6 +76,7 @@ export const MainNavigator = () => {
         component={MyProfile}
         options={{
           title: "MyProfile",
+          headerShown: false,
         }}
       />
       <Tab.Screen
