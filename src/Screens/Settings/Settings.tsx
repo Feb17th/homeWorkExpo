@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/Navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootScreens } from "@/Screens";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSwitch } from "@/Store/reducers/switch";
 
 export const Settings = () => {
   const theme = useTheme();
@@ -25,8 +27,12 @@ export const Settings = () => {
     },
   });
 
-  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const dispatch = useDispatch();
+  const isSwitchOn = useSelector((state) => state.switch.isSwitchOn);
+
+  const onToggleSwitch = () => {
+    dispatch(toggleSwitch());
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

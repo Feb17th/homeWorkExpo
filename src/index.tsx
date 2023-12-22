@@ -7,25 +7,31 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ApplicationNavigator } from "./Navigation";
 import { PaperProvider } from "react-native-paper";
-import { useColorScheme } from "react-native";
-import { DarkTheme, LightTheme } from "./Theme/theme";
 import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { DarkTheme, LightTheme } from "./Theme/theme";
 
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
 i18n.defaultLocale = Language.ENGLISH;
 
-export default function App() {
-  const scheme = useColorScheme();
+const AppWrapper = () => {
+  const isSwitchOn = useSelector((state) => state.switch.isSwitchOn);
 
+  return (
+    <PaperProvider theme={isSwitchOn === true ? DarkTheme : LightTheme}>
+      <ApplicationNavigator />
+      <Toast />
+    </PaperProvider>
+  );
+};
+
+export default function App() {
   return (
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <PaperProvider theme={scheme === "dark" ? DarkTheme : LightTheme}>
-            <ApplicationNavigator />
-            <Toast />
-          </PaperProvider>
+          <AppWrapper />
         </PersistGate>
       </Provider>
     </NativeBaseProvider>
