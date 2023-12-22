@@ -7,19 +7,43 @@ import { RootStackParamList } from "@/Navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootScreens } from "@/Screens";
 import { useNavigation } from "@react-navigation/native";
+import { RegisterAPI } from "@/Api";
+import { formDataRegisterType } from "@/type";
 
 export const Signup = () => {
   const [show, setShow] = React.useState(false);
   const [show2, setShow2] = React.useState(false);
+
+  const [formData, setFormData] = React.useState<formDataRegisterType>({});
+
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleRegister = async () => {
+    if (!formData.role) {
+      formData.role = "Customer";
+    }
+    try {
+      const res = await RegisterAPI(formData);
+      if (res.status === 200) {
+        alert("Tạo tài khoản thành công");
+        navigate(RootScreens.LOGIN);
+      }
+    } catch (err) {
+      if (err.response.status === 409) {
+        alert("Tên đăng nhập đã tồn tại trên hệ thống");
+      } else if (err.response.status === 400) {
+        alert("Tên đăng nhập hoặc mật khẩu không được để trống");
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: "#101010", flex: 1, gap: 50 }}>
+      <View style={{ backgroundColor: "#fff", flex: 1, gap: 50 }}>
         <View style={{ paddingTop: 50 }}>
           <Text
             style={{
-              color: "#fff",
+              color: "#101010",
               fontSize: 25,
               fontWeight: "bold",
               textAlign: "center",
@@ -43,6 +67,9 @@ export const Signup = () => {
             <View style={{ gap: 8 }}>
               <Text style={{ color: "#A4A4A4" }}>Tên đăng nhập</Text>
               <Input
+                onChangeText={(value) =>
+                  setFormData({ ...formData, userName: value })
+                }
                 size="md"
                 w={{
                   base: "100%",
@@ -57,7 +84,7 @@ export const Signup = () => {
                   />
                 }
                 placeholder="Username"
-                color="#fff"
+                color="#101010"
               />
             </View>
           </View>
@@ -65,6 +92,9 @@ export const Signup = () => {
             <View style={{ gap: 8 }}>
               <Text style={{ color: "#A4A4A4" }}>Mật khẩu</Text>
               <Input
+                onChangeText={(value) =>
+                  setFormData({ ...formData, password: value })
+                }
                 size="md"
                 w={{
                   base: "100%",
@@ -86,7 +116,7 @@ export const Signup = () => {
                   </Pressable>
                 }
                 placeholder="Password"
-                color="#fff"
+                color="#101010"
               />
             </View>
           </View>
@@ -115,12 +145,17 @@ export const Signup = () => {
                   </Pressable>
                 }
                 placeholder="Password"
-                color="#fff"
+                color="#101010"
               />
             </View>
           </View>
 
-          <Button size="md" colorScheme="secondary" style={{ marginTop: 10 }}>
+          <Button
+            size="md"
+            colorScheme="secondary"
+            style={{ marginTop: 10 }}
+            onPress={handleRegister}
+          >
             Đăng ký
           </Button>
           <View style={{ alignItems: "center" }}>
@@ -129,9 +164,7 @@ export const Signup = () => {
                 navigate(RootScreens.LOGIN);
               }}
             >
-              <Text style={{ color: "#A4A4A4", backgroundColor: "#101010" }}>
-                Đã có tài khoản?
-              </Text>
+              <Text style={{ color: "#A4A4A4" }}>Đã có tài khoản?</Text>
             </TouchableOpacity>
           </View>
         </View>

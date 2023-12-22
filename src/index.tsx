@@ -9,6 +9,7 @@ import { ApplicationNavigator } from "./Navigation";
 import { PaperProvider } from "react-native-paper";
 import { useColorScheme } from "react-native";
 import { DarkTheme, LightTheme } from "./Theme/theme";
+import Toast from "react-native-toast-message";
 
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
@@ -23,6 +24,7 @@ export default function App() {
         <PersistGate loading={null} persistor={persistor}>
           <PaperProvider theme={scheme === "dark" ? DarkTheme : LightTheme}>
             <ApplicationNavigator />
+            <Toast />
           </PaperProvider>
         </PersistGate>
       </Provider>

@@ -7,17 +7,41 @@ import { RootStackParamList } from "@/Navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootScreens } from "@/Screens";
 import { useNavigation } from "@react-navigation/native";
+import { formDataLoginType } from "@/type";
+import { LoginAPI } from "@/Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Login = () => {
   const [show, setShow] = React.useState(false);
+  const [formData, setFormData] = React.useState<formDataLoginType>({});
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleLogin = async () => {
+    try {
+      const res = await LoginAPI(formData);
+      if (res.status === 200) {
+        AsyncStorage.setItem("access_token", res.data.access_token);
+        AsyncStorage.setItem("refresh_token", res.data.refresh_token);
+        navigate(RootScreens.MAIN);
+      }
+    } catch (err) {
+      if (err.response.status === 404) {
+        alert("Tên đăng nhập không tồn tại");
+      } else if (err.response.status === 403) {
+        alert("Sai mật khẩu đăng nhập");
+      } else {
+        alert("Lỗi kết nối");
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: "#101010", flex: 1, gap: 50 }}>
+      <View style={{ backgroundColor: "#fff", flex: 1, gap: 50 }}>
         <View style={{ paddingTop: 50 }}>
           <Text
             style={{
-              color: "#fff",
+              color: "#101010",
               fontSize: 25,
               fontWeight: "bold",
               textAlign: "center",
@@ -41,6 +65,9 @@ export const Login = () => {
             <View style={{ gap: 8 }}>
               <Text style={{ color: "#A4A4A4" }}>Tên đăng nhập</Text>
               <Input
+                onChangeText={(value) =>
+                  setFormData({ ...formData, userName: value })
+                }
                 size="md"
                 w={{
                   base: "100%",
@@ -55,7 +82,7 @@ export const Login = () => {
                   />
                 }
                 placeholder="Username"
-                color="#fff"
+                color="#101010"
               />
             </View>
           </View>
@@ -63,6 +90,9 @@ export const Login = () => {
             <View style={{ gap: 8 }}>
               <Text style={{ color: "#A4A4A4" }}>Mật khẩu</Text>
               <Input
+                onChangeText={(value) =>
+                  setFormData({ ...formData, password: value })
+                }
                 size="md"
                 w={{
                   base: "100%",
@@ -84,7 +114,7 @@ export const Login = () => {
                   </Pressable>
                 }
                 placeholder="Password"
-                color="#fff"
+                color="#101010"
               />
             </View>
           </View>
@@ -93,20 +123,12 @@ export const Login = () => {
               <Text style={{ color: "#A4A4A4" }}>Quên mật khẩu ?</Text>
             </View>
           </View>
-          <Button
-            size="md"
-            colorScheme="secondary"
-            onPress={() => {
-              navigate(RootScreens.MAIN);
-            }}
-          >
+          <Button size="md" colorScheme="secondary" onPress={handleLogin}>
             Đăng nhập
           </Button>
           <View>
             <TouchableOpacity onPress={() => navigate(RootScreens.SIGNUP)}>
-              <Text style={{ color: "#A4A4A4", backgroundColor: "#101010" }}>
-                Chưa có tài khoản?
-              </Text>
+              <Text style={{ color: "#A4A4A4" }}>Chưa có tài khoản?</Text>
             </TouchableOpacity>
           </View>
         </View>
