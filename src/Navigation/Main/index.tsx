@@ -53,6 +53,7 @@ export const MainNavigator = () => {
         component={HomeContainer}
         options={{
           title: "Trang chủ",
+          headerShown: false,
         }}
       />
       <Tab.Screen

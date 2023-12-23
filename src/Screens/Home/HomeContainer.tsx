@@ -12,5 +12,5 @@ export const HomeContainer = () => {
     fetchOne(userId);
   }, [fetchOne, userId]);
 
-  return <Home data={data} isLoading={isLoading} />;
+  return <Home />;
 };
