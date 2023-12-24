@@ -6,6 +6,7 @@ import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 import * as ImagePicker from 'expo-image-picker';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useIsFocused } from '@react-navigation/native';
 
 
 
@@ -17,6 +18,7 @@ export const Home = () => {
   const [valueZoom, setValueZoom] = useState(0);
   const cameraRef = useRef(null);
   const [image, setImage] = useState(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     (async () => {
@@ -90,7 +92,8 @@ export const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Camera
+      {
+        isFocused && <Camera
         style={styles.camera}
         type={cameraType}
         flashMode={flashMode}
@@ -98,6 +101,7 @@ export const Home = () => {
         ref={cameraRef}
         zoom={valueZoom}
       />
+      }
       {scannedData ? (
         <View style={styles.overlay}>
           <Text style={styles.scannedText}>{scannedData}</Text>
