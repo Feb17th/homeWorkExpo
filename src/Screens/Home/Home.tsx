@@ -7,6 +7,16 @@ import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useIsFocused } from '@react-navigation/native';
+import {GetLocationById} from '@/Api';
+import { useNavigation } from '@react-navigation/native';
+import { RootScreens } from "@/Screens";
+// import { StackNavigationProp } from "@react-navigation/stack";
+
+// import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+
+// type propsType = NativeStackScreenProps<RootScreens, RootScreens.MAIN>;
+
 
 
 
@@ -17,26 +27,33 @@ export const Home = () => {
   const [scannedData, setScannedData] = useState(null);
   const [valueZoom, setValueZoom] = useState(0);
   const cameraRef = useRef(null);
-  const [image, setImage] = useState(null);
   const isFocused = useIsFocused();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
-    console.log(flashMode);
+    // console.log(flashMode);
     
   }, []);
 
-  // useEffect(() => {
-  //   if (hasPermission) {
-  //     cameraRef.current?.resumePreview();
-  //   }
-  // }, [hasPermission]);
-
-  const handleBarCodeScanned = ({ data }: { data: any }) => {
+  const handleBarCodeScanned = async ({ data }: { data: any }) => {
+    console.log("data handle Scan Qr code",data);
     setScannedData(data);
+    try {
+      const res = await GetLocationById(data);
+      console.log("res: ",res.data);
+      navigation.navigate(RootScreens.DATA_LOCATION, { data: res.data })
+      
+    } catch (error) {
+      console.log("err: ",error);
+      setScannedData("Không thể xử lý!");
+      
+    }
+    
   };
 
   const toggleFlashMode = () => {
@@ -74,7 +91,7 @@ export const Home = () => {
       if (!result.canceled) {
         let decodedBarcodeImage : any = await BarCodeScanner.scanFromURLAsync(result.assets[0].uri);
         // Handle result data
-        console.log(decodedBarcodeImage);
+        console.log("data sau khi chọn ảnh",decodedBarcodeImage);
         setScannedData(decodedBarcodeImage[0].data);
       } else {
         // Handle canceled result

@@ -5,4 +5,5 @@ export enum RootScreens {
   SIGNUP = "Signup",
   EDIT_PROFILE = "EditProfile",
   CHANGE_PASSWORD = "ChangePassword",
+  DATA_LOCATION = "DataLocation",
 }
