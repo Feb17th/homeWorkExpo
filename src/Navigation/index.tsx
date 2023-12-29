@@ -1,34 +1,30 @@
-import React from "react";
-import { StatusBar } from "react-native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { MainNavigator } from "./Main";
-import { WelcomeContainer } from "@/Screens/Welcome";
-import { Login } from "@/Screens/Login/Login";
-import { RootScreens } from "@/Screens";
-import { EditProfile } from "@/Screens/MyProfile/EditProfile";
-import { Signup } from "@/Screens/Signup/Signup";
-import { ChangePassword } from "@/Screens/MyProfile/ChangePassword";
-import { DataLocation } from "@/Screens/DataLocation/DataLocation";
+import React from 'react'
+import { StatusBar } from 'react-native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer } from '@react-navigation/native'
+import { MainNavigator } from './Main'
+import { WelcomeContainer } from '@/Screens/Welcome'
+import { Login } from '@/Screens/Login/Login'
+import { RootScreens } from '@/Screens'
+import { EditProfile } from '@/Screens/MyProfile/EditProfile'
+import { Signup } from '@/Screens/Signup/Signup'
+import { ChangePassword } from '@/Screens/MyProfile/ChangePassword'
+import { DataLocation } from '@/Screens/DataLocation/DataLocation'
+import { dataLocationType } from '@/type'
 
 export type RootStackParamList = {
-  [RootScreens.MAIN]: undefined;
-  [RootScreens.ONBOARDING]: undefined;
-  [RootScreens.LOGIN]: undefined;
-  [RootScreens.SIGNUP]: undefined;
-  [RootScreens.EDIT_PROFILE]: undefined;
-  [RootScreens.CHANGE_PASSWORD]: undefined;
+  [RootScreens.MAIN]: undefined
+  [RootScreens.ONBOARDING]: undefined
+  [RootScreens.LOGIN]: undefined
+  [RootScreens.SIGNUP]: undefined
+  [RootScreens.EDIT_PROFILE]: undefined
+  [RootScreens.CHANGE_PASSWORD]: undefined
   [RootScreens.DATA_LOCATION]: {
-    data: {
-      description: string;
-      image: string;
-      name: string;
-      position: string;
-    }
-  };
-};
+    data: dataLocationType
+  }
+}
 
-const RootStack = createNativeStackNavigator<RootStackParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>()
 
 // @refresh reset
 const ApplicationNavigator = () => {
@@ -72,7 +68,7 @@ const ApplicationNavigator = () => {
         />
       </RootStack.Navigator>
     </NavigationContainer>
-  );
-};
+  )
+}
 
-export { ApplicationNavigator };
+export { ApplicationNavigator }

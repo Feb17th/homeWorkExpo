@@ -1,124 +1,114 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera, FlashMode, CameraType } from 'expo-camera';
-import Slider from '@react-native-community/slider';
-import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import React, { useState, useEffect, useRef } from 'react'
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native'
+import { Camera, FlashMode, CameraType } from 'expo-camera'
+import Slider from '@react-native-community/slider'
+import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { RootStackParamList } from '@/Navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
 
-import * as ImagePicker from 'expo-image-picker';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useIsFocused } from '@react-navigation/native';
-import {GetLocationById} from '@/Api';
-import { useNavigation } from '@react-navigation/native';
-import { RootScreens } from "@/Screens";
+import * as ImagePicker from 'expo-image-picker'
+import { BarCodeScanner } from 'expo-barcode-scanner'
+import { useIsFocused } from '@react-navigation/native'
+import { GetLocationById } from '@/Api'
+import { useNavigation } from '@react-navigation/native'
+import { RootScreens } from '@/Screens'
 // import { StackNavigationProp } from "@react-navigation/stack";
 
 // import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-
 // type propsType = NativeStackScreenProps<RootScreens, RootScreens.MAIN>;
 
-
-
-
 export const Home = () => {
-  const [hasPermission, setHasPermission] = useState(false);
-  const [flashMode, setFlashMode] = useState(FlashMode.off);
-  const [cameraType, setCameraType] = useState(CameraType.back);
-  const [scannedData, setScannedData] = useState(null);
-  const [valueZoom, setValueZoom] = useState(0);
-  const cameraRef = useRef(null);
-  const isFocused = useIsFocused();
+  const [hasPermission, setHasPermission] = useState(false)
+  const [flashMode, setFlashMode] = useState(FlashMode.off)
+  const [cameraType, setCameraType] = useState(CameraType.back)
+  const [scannedData, setScannedData] = useState<string | null>(null)
+  const [valueZoom, setValueZoom] = useState(0)
+  const cameraRef = useRef(null)
+  const isFocused = useIsFocused()
 
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+    ;(async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync()
+      setHasPermission(status === 'granted')
+    })()
     // console.log(flashMode);
-    
-  }, []);
+  }, [])
 
   const handleBarCodeScanned = async ({ data }: { data: any }) => {
-    console.log("data handle Scan Qr code",data);
-    setScannedData(data);
+    console.log('data handle Scan Qr code', data)
+    setScannedData(data)
     try {
-      const res = await GetLocationById(data);
-      console.log("res: ",res.data);
-      navigation.navigate(RootScreens.DATA_LOCATION, { data: res.data })
-      
+      const res = await GetLocationById(data)
+
+      console.log('res: ', res?.data)
+      navigate(RootScreens.DATA_LOCATION, { data: res?.data })
     } catch (error) {
-      console.log("err: ",error);
-      setScannedData("Không thể xử lý!");
-      
+      console.log('err: ', error)
+      setScannedData('Không thể xử lý!')
     }
-    
-  };
+  }
 
   const toggleFlashMode = () => {
-    setFlashMode(
-      flashMode === FlashMode.off
-        ? FlashMode.on
-        : FlashMode.off
-    );
-    console.log(flashMode);
-    
-  };
+    setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)
+    console.log(flashMode)
+  }
 
   const toggleCameraType = () => {
     setCameraType(
-      cameraType === CameraType.back
-        ? CameraType.front
-        : CameraType.back
-    );
-  };
+      cameraType === CameraType.back ? CameraType.front : CameraType.back
+    )
+  }
 
-  const handleValueChange = (newValue : number) => {
-    setValueZoom(newValue);
-  };
+  const handleValueChange = (newValue: number) => {
+    setValueZoom(newValue)
+  }
 
   const handleScanAgain = () => {
-    setScannedData(null);
-  };
+    setScannedData(null)
+  }
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (status === 'granted') {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      });
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
+      })
       if (!result.canceled) {
-        let decodedBarcodeImage : any = await BarCodeScanner.scanFromURLAsync(result.assets[0].uri);
+        let decodedBarcodeImage: any = await BarCodeScanner.scanFromURLAsync(
+          result.assets[0].uri
+        )
         // Handle result data
-        console.log("data sau khi chọn ảnh",decodedBarcodeImage);
-        setScannedData(decodedBarcodeImage[0].data);
+        console.log('data sau khi chọn ảnh', decodedBarcodeImage)
+        setScannedData(decodedBarcodeImage[0].data)
       } else {
         // Handle canceled result
-        console.log('You did not select any image.');
+        console.log('You did not select any image.')
       }
     }
-  };
+  }
 
   if (hasPermission === null) {
-    return <View />;
+    return <View />
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>No access to camera</Text>
   }
 
   return (
     <View style={styles.container}>
-      {
-        isFocused && <Camera
-        style={styles.camera}
-        type={cameraType}
-        flashMode={flashMode}
-        onBarCodeScanned={scannedData ? undefined : handleBarCodeScanned}
-        ref={cameraRef}
-        zoom={valueZoom}
-      />
-      }
+      {isFocused && (
+        <Camera
+          style={styles.camera}
+          type={cameraType}
+          flashMode={flashMode}
+          onBarCodeScanned={scannedData ? undefined : handleBarCodeScanned}
+          ref={cameraRef}
+          zoom={valueZoom}
+        />
+      )}
       {scannedData ? (
         <View style={styles.overlay}>
           <Text style={styles.scannedText}>{scannedData}</Text>
@@ -141,51 +131,59 @@ export const Home = () => {
           </View>
 
           <View style={styles.modeScan}>
-            <TouchableOpacity onPress={toggleFlashMode} style={styles.buttonMode}>
+            <TouchableOpacity
+              onPress={toggleFlashMode}
+              style={styles.buttonMode}
+            >
               <Entypo name="flash" size={24} color="white" />
-              <Text style={{ marginLeft: 8, color: "white" }}>Flash</Text>
+              <Text style={{ marginLeft: 8, color: 'white' }}>Flash</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleCameraType} style={[styles.buttonMode, { borderLeftWidth: 0.7 }]}>
+            <TouchableOpacity
+              onPress={toggleCameraType}
+              style={[styles.buttonMode, { borderLeftWidth: 0.7 }]}
+            >
               <Feather name="rotate-ccw" size={24} color="white" />
-              <Text style={{ marginLeft: 8, color: "white" }}>Toggle</Text>
+              <Text style={{ marginLeft: 8, color: 'white' }}>Toggle</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={pickImage} style={[styles.buttonMode, { borderLeftWidth: 0.7 }]}>
+            <TouchableOpacity
+              onPress={pickImage}
+              style={[styles.buttonMode, { borderLeftWidth: 0.7 }]}
+            >
               <FontAwesome5 name="image" size={24} color="white" />
-              <Text style={{ marginLeft: 8, color: "white" }}>Image</Text>
+              <Text style={{ marginLeft: 8, color: 'white' }}>Image</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: 'black'
     // alignItems: 'center',
   },
   camera: {
-    flex: 1,
+    flex: 1
   },
   containerZoom: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    gap: 2,
-
+    gap: 2
   },
   sliderZoom: {
     flex: 1,
-    height: 40,
+    height: 40
   },
   buttonMode: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 60,
-    paddingHorizontal: 15,
+    paddingHorizontal: 15
   },
   modeScan: {
     flexDirection: 'row',
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#337FB6',
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 10
   },
   overlay: {
     flex: 1,
@@ -205,13 +203,13 @@ const styles = StyleSheet.create({
     bottom: 10,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    width: '100%',
+    width: '100%'
     // backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   scannedText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
-  },
-});
+    marginBottom: 16
+  }
+})
