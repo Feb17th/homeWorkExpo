@@ -1,3 +1,4 @@
+import { infoPasswordType } from './../type'
 import axios from 'axios'
 import { formDataLoginType, formDataRegisterType, infoUserType } from '@/type'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -20,7 +21,7 @@ export const RegisterAPI = async (formData: formDataRegisterType) => {
   return await axios({
     method: 'post',
     data: formData,
-    url: `${URL_BE}/api/v1/auth/register`
+    url: `${URL_BE}/auth/register`
   })
 }
 
@@ -29,7 +30,7 @@ export const GetOneUser = async () => {
 
   return await axios({
     method: 'get',
-    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/common/info`,
+    url: `${URL_BE}/common/info`,
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -49,6 +50,19 @@ export const UpdateOneUser = async (infoUpdate: infoUserType) => {
   })
 }
 
+export const ChangePassword = async (infoPassword: infoPasswordType) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+  console.log(token)
+  return await axios({
+    method: 'put',
+    data: infoPassword,
+    url: `${URL_BE}/common/password`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
 export const GetLocationById = async (id: string) => {
   console.log('kiem tra id location', id)
   // console.log("den day roif nef");
@@ -57,7 +71,7 @@ export const GetLocationById = async (id: string) => {
 
   return await axios({
     method: 'get',
-    url: `${URL_BE}/api/v1/location/${id}`,
+    url: `${URL_BE}/location/${id}`,
     headers: token ? { Authorization: `Bearer ${token}` } : {}
   })
 }
