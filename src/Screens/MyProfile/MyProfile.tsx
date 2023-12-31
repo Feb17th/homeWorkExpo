@@ -1,15 +1,14 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Avatar } from 'native-base'
 import { Input, Button } from 'native-base'
-import { Feather, Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { RootScreens } from '@/Screens'
 import { RootStackParamList } from '@/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { GetOneUser } from '@/Api'
 import { infoUserType } from '@/type'
+import { Image } from 'react-native'
 
 export const MyProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
@@ -52,18 +51,19 @@ export const MyProfile = () => {
           ></View>
 
           <View style={{ alignItems: 'center', gap: 10 }}>
-            <Avatar
-              bg="green.500"
-              mr="1"
-              width={100}
-              height={100}
+            <Image
               source={{
-                uri: 'https://www.facebook.com/photo/?fbid=1691380308038966&set=a.112553472588332'
+                uri:
+                  info.image ||
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiNiRvww3b0g1mQ6T_4I-NtoLPcmZY4qc-eqmyWx5_TxTuHj6NzXnSZfZRulrab516Kk8&usqp=CAU'
               }}
-              style={{ marginTop: 60 }}
-            >
-              RS
-            </Avatar>
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                marginTop: 60
+              }}
+            />
           </View>
         </View>
         <View style={{ paddingHorizontal: 20, marginTop: 40, gap: 20 }}>

@@ -10,6 +10,8 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { GetOneUser, UpdateOneUser } from '@/Api'
 import { infoUserType } from '@/type'
 import { CommonActions } from '@react-navigation/native'
+import * as ImagePicker from 'expo-image-picker'
+import { Image } from 'react-native'
 
 export const EditProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
@@ -53,6 +55,22 @@ export const EditProfile = () => {
     }
   }
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    })
+
+    console.log(result)
+
+    if (!result.canceled) {
+      setInfo({ ...info, image: result.assets[0].uri })
+    }
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ backgroundColor: '#fff', flex: 1 }}>
@@ -86,30 +104,33 @@ export const EditProfile = () => {
           </View>
 
           <View style={{ alignItems: 'center', gap: 10 }}>
-            <Avatar
-              bg="green.500"
-              mr="1"
-              width={100}
-              height={100}
+            <Image
               source={{
-                uri: 'https://www.facebook.com/photo/?fbid=1691380308038966&set=a.112553472588332'
+                uri:
+                  info.image ||
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiNiRvww3b0g1mQ6T_4I-NtoLPcmZY4qc-eqmyWx5_TxTuHj6NzXnSZfZRulrab516Kk8&usqp=CAU'
               }}
-              style={{ marginTop: 60 }}
-            >
-              RS
-            </Avatar>
-
-            <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 12,
-                justifyContent: 'center'
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                marginTop: 60
               }}
-            >
-              <Text>Thay đổi ảnh đại diện</Text>
-              <Feather name="upload" size={24} color="black" />
-            </View>
+            />
+
+            <TouchableOpacity onPress={pickImage}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 12,
+                  justifyContent: 'center'
+                }}
+              >
+                <Text>Thay đổi ảnh đại diệnn</Text>
+                <Feather name="upload" size={24} color="black" />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ paddingHorizontal: 20, marginTop: 70, gap: 20 }}>
