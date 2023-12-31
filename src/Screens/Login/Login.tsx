@@ -1,7 +1,14 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Input, Icon, Pressable, Button } from 'native-base'
+import {
+  Input,
+  Icon,
+  Pressable,
+  Button,
+  FormControl,
+  WarningOutlineIcon
+} from 'native-base'
 import { MaterialIcons } from '@expo/vector-icons'
 import { RootStackParamList } from '@/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -19,6 +26,8 @@ export const Login = () => {
   const [loading, setLoading] = React.useState(false)
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
+  const [error, setError] = React.useState<string>('') //Tên đăng nhập ko tồn tại
+
   const handleLogin = async () => {
     try {
       setLoading(true)
@@ -30,11 +39,9 @@ export const Login = () => {
       }
     } catch (err) {
       if (err.response.status === 404) {
-        alert('Tên đăng nhập không tồn tại')
+        setError('Tên đăng nhập không tồn tại')
       } else if (err.response.status === 403) {
-        alert('Sai mật khẩu đăng nhập')
-      } else {
-        alert('Lỗi kết nối')
+        setError('Sai mật khẩu đăng nhập')
       }
     } finally {
       setLoading(false)
@@ -68,8 +75,11 @@ export const Login = () => {
         </View>
         <View style={{ gap: 20, paddingHorizontal: 30 }}>
           <View style={{ alignItems: 'center' }}>
-            <View style={{ gap: 8 }}>
-              <Text style={{ color: '#A4A4A4' }}>Tên đăng nhập</Text>
+            <FormControl
+              isInvalid={error === 'Tên đăng nhập không tồn tại' ? true : false}
+              style={{ gap: 8 }}
+            >
+              <FormControl.Label>Tên đăng nhập</FormControl.Label>
               <Input
                 onChangeText={(value) =>
                   setFormData({ ...formData, userName: value })
@@ -90,11 +100,21 @@ export const Login = () => {
                 placeholder="Username"
                 color="#101010"
               />
-            </View>
+              {error === 'Tên đăng nhập không tồn tại' && (
+                <FormControl.ErrorMessage
+                  leftIcon={<WarningOutlineIcon size="xs" />}
+                >
+                  {error}
+                </FormControl.ErrorMessage>
+              )}
+            </FormControl>
           </View>
           <View style={{ alignItems: 'center' }}>
-            <View style={{ gap: 8 }}>
-              <Text style={{ color: '#A4A4A4' }}>Mật khẩu</Text>
+            <FormControl
+              isInvalid={error === 'Sai mật khẩu đăng nhập' ? true : false}
+              style={{ gap: 8 }}
+            >
+              <FormControl.Label>Mật khẩu</FormControl.Label>
               <Input
                 onChangeText={(value) =>
                   setFormData({ ...formData, password: value })
@@ -122,7 +142,14 @@ export const Login = () => {
                 placeholder="Password"
                 color="#101010"
               />
-            </View>
+              {error === 'Sai mật khẩu đăng nhập' && (
+                <FormControl.ErrorMessage
+                  leftIcon={<WarningOutlineIcon size="xs" />}
+                >
+                  {error}
+                </FormControl.ErrorMessage>
+              )}
+            </FormControl>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
             <View>
