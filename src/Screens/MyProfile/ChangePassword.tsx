@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Avatar } from 'native-base'
 import { Input, Icon, Pressable, Button } from 'native-base'
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { RootScreens } from '@/Screens'
 import { RootStackParamList } from '@/Navigation'
@@ -30,7 +29,6 @@ export const ChangePassword = () => {
         navigate('Settings')
       }
     } catch (err) {
-      console.log('err:', err)
       if (err.response.status === 400) {
         if (err.response.data.message === 'No overlap') {
           alert('Xác nhận mật khẩu không trùng nhau')

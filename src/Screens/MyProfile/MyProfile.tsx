@@ -9,23 +9,28 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { GetOneUser } from '@/Api'
 import { infoUserType } from '@/type'
 import { Image } from 'react-native'
+import LoadingAPI from '@/Components/Loading'
 
 export const MyProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const [info, setInfo] = React.useState<infoUserType>({})
+  const [loading, setLoading] = React.useState(true)
 
-  console.log('info:', info)
   const loadUser = async () => {
     try {
-      console.log('getOne19:')
       const res = await GetOneUser()
       setInfo(res.data)
-      console.log('getOne:', res.data)
     } catch (err) {
-      console.log('🚀 ~ file: Profile.tsx:27 ~ loadUser ~ err:', err)
+      if (err.response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn')
+        navigate(RootScreens.LOGIN)
+      }
+    } finally {
+      setLoading(false)
     }
   }
+
   React.useEffect(() => {
     loadUser()
   }, [])
@@ -66,64 +71,70 @@ export const MyProfile = () => {
             />
           </View>
         </View>
-        <View style={{ paddingHorizontal: 20, marginTop: 40, gap: 20 }}>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Họ và tên</Text>
-            <Input
-              value={info.name}
-              isDisabled={true}
-              onChangeText={(value) => setInfo({ ...info, name: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="Username"
-              color="#000"
-            />
-          </View>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Số điện thoại</Text>
-            <Input
-              value={info.phoneNumber}
-              isDisabled={true}
-              onChangeText={(value) => setInfo({ ...info, phoneNumber: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="SĐT"
-              color="#000"
-            />
-          </View>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Địa chỉ</Text>
-            <Input
-              value={info.address}
-              isDisabled={true}
-              onChangeText={(value) => setInfo({ ...info, address: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="Địa chỉ"
-              color="#000"
-            />
-          </View>
-          <View>
-            <TouchableOpacity>
-              <Button
+        {loading ? (
+          <LoadingAPI />
+        ) : (
+          <View style={{ paddingHorizontal: 20, marginTop: 40, gap: 20 }}>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Họ và tên</Text>
+              <Input
+                value={info.name}
+                isDisabled={true}
+                onChangeText={(value) => setInfo({ ...info, name: value })}
                 size="md"
-                colorScheme="secondary"
-                onPress={() => navigate(RootScreens.EDIT_PROFILE)}
-              >
-                Chỉnh sửa
-              </Button>
-            </TouchableOpacity>
+                w={{
+                  base: '100%',
+                  md: '25%'
+                }}
+                placeholder="Username"
+                color="#000"
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Số điện thoại</Text>
+              <Input
+                value={info.phoneNumber}
+                isDisabled={true}
+                onChangeText={(value) =>
+                  setInfo({ ...info, phoneNumber: value })
+                }
+                size="md"
+                w={{
+                  base: '100%',
+                  md: '25%'
+                }}
+                placeholder="SĐT"
+                color="#000"
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Địa chỉ</Text>
+              <Input
+                value={info.address}
+                isDisabled={true}
+                onChangeText={(value) => setInfo({ ...info, address: value })}
+                size="md"
+                w={{
+                  base: '100%',
+                  md: '25%'
+                }}
+                placeholder="Địa chỉ"
+                color="#000"
+              />
+            </View>
+            <View>
+              <TouchableOpacity>
+                <Button
+                  size="md"
+                  colorScheme="secondary"
+                  onPress={() => navigate(RootScreens.EDIT_PROFILE)}
+                >
+                  Chỉnh sửa
+                </Button>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </SafeAreaView>
   )

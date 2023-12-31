@@ -11,6 +11,8 @@ import { RootScreens } from '@/Screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSwitch } from '@/Store/reducers/switch'
 import { CommonActions } from '@react-navigation/native'
+import { infoUserType } from '@/type'
+import { GetOneUser } from '@/Api'
 
 export const Settings = () => {
   const theme = useTheme()
@@ -28,6 +30,22 @@ export const Settings = () => {
       color: theme.colors.textSettings
     }
   })
+  const [info, setInfo] = React.useState<infoUserType>({})
+
+  const loadUser = async () => {
+    try {
+      const res = await GetOneUser()
+      setInfo(res.data)
+    } catch (err) {
+      if (err.response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn')
+        navigate(RootScreens.LOGIN)
+      }
+    }
+  }
+  React.useEffect(() => {
+    loadUser()
+  }, [])
 
   const dispatch = useDispatch()
   const isSwitchOn = useSelector((state) => state.switch.isSwitchOn)
@@ -98,7 +116,7 @@ export const Settings = () => {
             top: 100,
             left: 20,
             right: 20,
-            bottom: 0,
+            bottom: -20,
             backgroundColor: theme.colors.settings,
             gap: 20,
             paddingVertical: 20,
@@ -107,7 +125,7 @@ export const Settings = () => {
             borderRadius: 15
           }}
         >
-          <Text style={styles.textColor}>Icetea1702</Text>
+          <Text style={styles.textColor}>{info.name}</Text>
           <Divider />
           <View>
             <Text style={{ color: '#ADADAD' }}>Cài đặt tài khoản</Text>

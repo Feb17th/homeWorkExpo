@@ -12,21 +12,27 @@ import { infoUserType } from '@/type'
 import { CommonActions } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker'
 import { Image } from 'react-native'
+import { RootScreens } from '..'
+import LoadingAPI from '@/Components/Loading'
 
 export const EditProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
   const navigation = useNavigation()
   const [info, setInfo] = React.useState<infoUserType>({})
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     const loadUser = async () => {
       try {
-        console.log('getOne110:')
         const res = await GetOneUser()
         setInfo(res.data)
-        console.log('getOne:', res.data)
       } catch (err) {
-        console.log('🚀 ~ file: Profile.tsx:27 ~ loadUser ~ err:', err)
+        if (err.response.status === 401) {
+          alert('Phiên đăng nhập đã hết hạn')
+          navigate(RootScreens.LOGIN)
+        }
+      } finally {
+        setLoading(false)
       }
     }
     loadUser()
@@ -51,7 +57,6 @@ export const EditProfile = () => {
       }
     } catch (err) {
       alert('Cập nhật thông tin thất bại')
-      console.log('🚀 ~ file: Profile.tsx:42 ~ handleUpdate ~ err:', err)
     }
   }
 
@@ -133,72 +138,78 @@ export const EditProfile = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ paddingHorizontal: 20, marginTop: 70, gap: 20 }}>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Họ và tên</Text>
-            <Input
-              value={info.name}
-              onChangeText={(value) => setInfo({ ...info, name: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="Username"
-              color="#000"
-            />
-          </View>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Số điện thoại</Text>
-            <Input
-              value={info.phoneNumber}
-              onChangeText={(value) => setInfo({ ...info, phoneNumber: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="SĐT"
-              color="#000"
-            />
-          </View>
-          <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>Địa chỉ</Text>
-            <Input
-              value={info.address}
-              onChangeText={(value) => setInfo({ ...info, address: value })}
-              size="md"
-              w={{
-                base: '100%',
-                md: '25%'
-              }}
-              placeholder="Địa chỉ"
-              color="#000"
-            />
-          </View>
-          <View>
-            <View style={{ flexDirection: 'row', gap: 20 }}>
-              <Button
+        {loading ? (
+          <LoadingAPI />
+        ) : (
+          <View style={{ paddingHorizontal: 20, marginTop: 70, gap: 20 }}>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Họ và tên</Text>
+              <Input
+                value={info.name}
+                onChangeText={(value) => setInfo({ ...info, name: value })}
                 size="md"
-                colorScheme="secondary"
-                style={{ flex: 1 }}
-                onPress={() => {
-                  navigate('MyProfile')
+                w={{
+                  base: '100%',
+                  md: '25%'
                 }}
-              >
-                Hủy
-              </Button>
-              <Button
+                placeholder="Username"
+                color="#000"
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Số điện thoại</Text>
+              <Input
+                value={info.phoneNumber}
+                onChangeText={(value) =>
+                  setInfo({ ...info, phoneNumber: value })
+                }
                 size="md"
-                colorScheme="secondary"
-                style={{ flex: 1 }}
-                onPress={handleUpdate}
-              >
-                Cập nhật
-              </Button>
+                w={{
+                  base: '100%',
+                  md: '25%'
+                }}
+                placeholder="SĐT"
+                color="#000"
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontWeight: 'bold' }}>Địa chỉ</Text>
+              <Input
+                value={info.address}
+                onChangeText={(value) => setInfo({ ...info, address: value })}
+                size="md"
+                w={{
+                  base: '100%',
+                  md: '25%'
+                }}
+                placeholder="Địa chỉ"
+                color="#000"
+              />
+            </View>
+            <View>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <Button
+                  size="md"
+                  colorScheme="secondary"
+                  style={{ flex: 1 }}
+                  onPress={() => {
+                    navigate('MyProfile')
+                  }}
+                >
+                  Hủy
+                </Button>
+                <Button
+                  size="md"
+                  colorScheme="secondary"
+                  style={{ flex: 1 }}
+                  onPress={handleUpdate}
+                >
+                  Cập nhật
+                </Button>
+              </View>
             </View>
           </View>
-        </View>
+        )}
       </View>
     </SafeAreaView>
   )
