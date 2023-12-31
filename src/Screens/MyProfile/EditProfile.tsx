@@ -9,10 +9,11 @@ import { RootStackParamList } from '@/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { GetOneUser, UpdateOneUser } from '@/Api'
 import { infoUserType } from '@/type'
+import { CommonActions } from '@react-navigation/native'
 
 export const EditProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
-
+  const navigation = useNavigation()
   const [info, setInfo] = React.useState<infoUserType>({})
 
   React.useEffect(() => {
@@ -35,6 +36,16 @@ export const EditProfile = () => {
       if (res.status === 200) {
         alert('Cập nhật thông tin thành công')
         navigate('MyProfile')
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'MyProfile'
+              }
+            ]
+          })
+        )
       }
     } catch (err) {
       alert('Cập nhật thông tin thất bại')
