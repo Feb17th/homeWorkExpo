@@ -1,12 +1,15 @@
 import axios from 'axios'
-import { formDataLoginType, formDataRegisterType } from '@/type'
+import { formDataLoginType, formDataRegisterType, infoUserType } from '@/type'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const URL_BE =
+  'http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1'
 
 export const LoginAPI = async (formData: formDataLoginType) => {
   return await axios({
     method: 'post',
     data: formData,
-    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/auth/authenticate`
+    url: `${URL_BE}/auth/authenticate`
     //   headers: {
     //     Authorization: `Bearer ${JWT_loginToken}`,
     //   },
@@ -17,7 +20,32 @@ export const RegisterAPI = async (formData: formDataRegisterType) => {
   return await axios({
     method: 'post',
     data: formData,
-    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/auth/register`
+    url: `${URL_BE}/api/v1/auth/register`
+  })
+}
+
+export const GetOneUser = async () => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  return await axios({
+    method: 'get',
+    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/common/info`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export const UpdateOneUser = async (infoUpdate: infoUserType) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  return await axios({
+    method: 'put',
+    data: infoUpdate,
+    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/common/info`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   })
 }
 
@@ -25,11 +53,11 @@ export const GetLocationById = async (id: string) => {
   console.log('kiem tra id location', id)
   // console.log("den day roif nef");
 
-  const token = AsyncStorage.getItem('access_token') || undefined
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   return await axios({
     method: 'get',
-    url: `http://qrscan-env.eba-abenjibs.ap-southeast-1.elasticbeanstalk.com/api/v1/location/${id}`,
+    url: `${URL_BE}/api/v1/location/${id}`,
     headers: token ? { Authorization: `Bearer ${token}` } : {}
   })
 }

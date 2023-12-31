@@ -9,6 +9,13 @@ export interface formDataRegisterType {
   role?: string
 }
 
+export interface infoUserType {
+  image?: string
+  name?: string
+  address?: string
+  phoneNumber?: string
+}
+
 export interface dataLocationType {
   description: string
   image: string
