@@ -14,6 +14,7 @@ import { deleteHistory, getHistory, saveHistory } from "@/Api";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import LoadingAPI from "@/Components/Loading";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const History = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -21,22 +22,26 @@ export const History = () => {
 
   const [data, setData] = useState([] as any[]);
   const [selectedId, setSelectedId] = useState();
+  const [refetch, setRefecth] = useState(false);
 
-  useEffect(() => {
-    getHistory(setData);
-  }, [data]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getHistory(setData, setLoading);
+    }, [])
+  );
 
-  const handleSave = (id: number) => {
+  const handleSave = async (id: number) => {
     setLoading(true);
-    saveHistory(id, setLoading);
-    setData(data);
+    await saveHistory(id);
+    await getHistory(setData, setLoading);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setLoading(true);
-    deleteHistory(selectedId, setLoading);
-    setData(data);
+    await deleteHistory(selectedId);
     setModalVisible(!modalVisible);
+    await getHistory(setData, setLoading);
   };
 
   return (

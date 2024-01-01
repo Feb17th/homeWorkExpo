@@ -11,20 +11,23 @@ import { getSaved, saveHistory } from "@/Api";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import LoadingAPI from "@/Components/Loading";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const Save = () => {
   const [data, setData] = useState([] as any[]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    getSaved(setData, setLoading);
-  }, [data]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getSaved(setData, setLoading);
+    }, [])
+  );
 
-  const handleSave = (id: number) => {
+  const handleSave = async (id: number) => {
     setLoading(true);
-    saveHistory(id, setLoading);
-    setData(data);
+    await saveHistory(id);
+    await getSaved(setData, setLoading);
   };
 
   return (
