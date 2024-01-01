@@ -13,6 +13,7 @@ import { toggleSwitch } from '@/Store/reducers/switch'
 import { CommonActions } from '@react-navigation/native'
 import { infoUserType } from '@/type'
 import { GetOneUser } from '@/Api'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const Settings = () => {
   const theme = useTheme()
@@ -66,6 +67,12 @@ export const Settings = () => {
         ]
       })
     )
+  }
+
+  const handleLogout = async () => {
+    navigate(RootScreens.LOGIN)
+    await AsyncStorage.removeItem('access_token')
+    await AsyncStorage.removeItem('refresh_token')
   }
 
   return (
@@ -184,12 +191,7 @@ export const Settings = () => {
               style={styles.textColor}
             />
           </View>
-          <TouchableOpacity
-            style={styles.itemSetting}
-            onPress={() => {
-              navigate(RootScreens.LOGIN)
-            }}
-          >
+          <TouchableOpacity style={styles.itemSetting} onPress={handleLogout}>
             <Text style={styles.textColor}>Đăng xuất</Text>
             <MaterialIcons
               name="keyboard-arrow-right"
