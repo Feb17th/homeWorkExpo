@@ -68,7 +68,8 @@ export const GetLocationById = async (id: string) => {
   // console.log("den day roif nef");
 
   const token = (await AsyncStorage.getItem('access_token')) || undefined
-
+  console.log("token", token);
+  
   return await axios({
     method: 'get',
     url: `${URL_BE}/location/${id}`,

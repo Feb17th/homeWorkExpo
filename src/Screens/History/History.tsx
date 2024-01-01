@@ -26,6 +26,7 @@ export const History = () => {
 
   useFocusEffect(
     React.useCallback(() => {
+      setData([]);
       setLoading(true);
       getHistory(setData, setLoading);
     }, [])
