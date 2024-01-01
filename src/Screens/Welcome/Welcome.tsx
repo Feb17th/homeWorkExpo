@@ -1,55 +1,55 @@
-import React, { useState } from 'react'
-import { i18n, LocalizationKey } from '@/Localization'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { Button } from 'native-base'
-import { RootScreens } from '..'
-import AppIntroSlider from 'react-native-app-intro-slider'
-import { COLORS, SIZES } from '../../Theme/ColorOnboarding'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState } from "react";
+import { i18n, LocalizationKey } from "@/Localization";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { Button } from "native-base";
+import { RootScreens } from "..";
+import AppIntroSlider from "react-native-app-intro-slider";
+import { COLORS, SIZES } from "../../Theme/ColorOnboarding";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Welcome = (props: {
-  onNavigate: (string: RootScreens) => void
+  onNavigate: (string: RootScreens) => void;
 }) => {
   const buttonLabel = (label: any) => {
     return (
       <View
         style={{
-          padding: 12
+          padding: 12,
         }}
       >
         <Text
           style={{
             color: COLORS.title,
-            fontWeight: '600',
-            fontSize: SIZES.h4
+            fontWeight: "600",
+            fontSize: SIZES.h4,
           }}
         >
           {label}
         </Text>
       </View>
-    )
-  }
+    );
+  };
 
-  const [isToken, setIsToken] = React.useState(false)
+  const [isToken, setIsToken] = React.useState(false);
 
   const loadToken = async () => {
-    const token = (await AsyncStorage.getItem('access_token')) || undefined
+    const token = (await AsyncStorage.getItem("access_token")) || undefined;
     if (token) {
-      setIsToken(true)
+      setIsToken(true);
     } else {
-      setIsToken(false)
+      setIsToken(false);
     }
-  }
+  };
 
   React.useEffect(() => {
-    loadToken()
-  }, [])
+    loadToken();
+  }, []);
 
   return (
     <AppIntroSlider
       style={{
-        backgroundColor: '#101010'
+        backgroundColor: "#101010",
       }}
       data={slides}
       renderItem={({ item }) => {
@@ -57,81 +57,81 @@ export const Welcome = (props: {
           <View
             style={{
               flex: 1,
-              alignItems: 'center',
+              alignItems: "center",
               padding: 15,
-              paddingTop: 100
+              paddingTop: 100,
             }}
           >
             <Image
               source={item.image}
               style={{
                 width: SIZES.width - 80,
-                height: 400
+                height: 400,
               }}
               resizeMode="contain"
             />
             <Text
               style={{
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 color: COLORS.title,
-                fontSize: SIZES.h1
+                fontSize: SIZES.h1,
               }}
             >
               {item.title}
             </Text>
             <Text
               style={{
-                textAlign: 'center',
+                textAlign: "center",
                 paddingTop: 5,
-                color: COLORS.title
+                color: COLORS.title,
               }}
             >
               {item.description}
             </Text>
           </View>
-        )
+        );
       }}
       activeDotStyle={{
         backgroundColor: COLORS.primary,
-        width: 30
+        width: 30,
       }}
       showSkipButton
-      renderNextButton={() => buttonLabel('Next')}
-      renderSkipButton={() => buttonLabel('Skip')}
-      renderDoneButton={() => buttonLabel('Done')}
+      renderNextButton={() => buttonLabel("Next")}
+      renderSkipButton={() => buttonLabel("Skip")}
+      renderDoneButton={() => buttonLabel("Done")}
       onDone={() => {
         if (isToken) {
-          props.onNavigate(RootScreens.MAIN)
+          props.onNavigate(RootScreens.MAIN);
         } else {
-          props.onNavigate(RootScreens.LOGIN)
+          props.onNavigate(RootScreens.LOGIN);
         }
       }}
     />
-  )
-}
+  );
+};
 
 const slides = [
   {
     id: 1,
-    title: 'Chào mừng đến với QR Find Place',
+    title: "Chào mừng đến với QR Find Place",
     description:
-      'Ứng dụng này được phát triển bởi sinh viên trường đại học Bách Khoa',
-    image: require('../../Images/OnBoarding_1.png')
+      "Ứng dụng này được phát triển bởi sinh viên trường đại học Bách Khoa",
+    image: require("../../Images/onboarding1.png"),
   },
   {
     id: 2,
-    title: 'Chức năng chính của ứng dụng',
+    title: "Chức năng chính của ứng dụng",
     description:
-      'Bạn có thể quét mã QR để biết thêm thông tin chi tiết của nơi bạn đang đứng.',
-    image: require('../../Images/OnBoarding_2.png')
-  }
-]
+      "Bạn có thể quét mã QR để biết thêm thông tin chi tiết của nơi bạn đang đứng.",
+    image: require("../../Images/onboarding2.png"),
+  },
+];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
