@@ -95,7 +95,7 @@ export const getHistory = async (setData : any) => {
   }
 }
 
-export const saveHistory = async (id: number) => {
+export const saveHistory = async (id: number, setLoading: any) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -106,13 +106,15 @@ export const saveHistory = async (id: number) => {
            Authorization: `Bearer ${token}`,
        },
     });
+    setLoading(false)
     return response.data;
   } catch (e) {
     console.log(e)
+    setLoading(false)
   }
 }
 
-export const deleteHistory = async (id: number | undefined) => {
+export const deleteHistory = async (id: number | undefined, setLoading: any) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -123,13 +125,15 @@ export const deleteHistory = async (id: number | undefined) => {
            Authorization: `Bearer ${token}`,
        },
     });
+    setLoading(false)
     return response.data;
   } catch (e) {
-    console.log(e)
+    console.log(e)    
+    setLoading(false)
   }
 }
 
-export const getSaved = async (setData : any) => {
+export const getSaved = async (setData : any, setLoading: any) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -141,9 +145,11 @@ export const getSaved = async (setData : any) => {
        },
     });
     setData(response.data?.listContent)
+    setLoading(false)
     return response.data;
   } catch (e) {
     console.log(e)
+    setLoading(false)
   }
 }
 

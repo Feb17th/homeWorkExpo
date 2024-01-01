@@ -13,9 +13,11 @@ import {
 import { deleteHistory, getHistory, saveHistory } from "@/Api";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
+import LoadingAPI from "@/Components/Loading";
 
 export const History = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([] as any[]);
   const [selectedId, setSelectedId] = useState();
@@ -25,13 +27,14 @@ export const History = () => {
   }, [data]);
 
   const handleSave = (id: number) => {
-    saveHistory(id);
+    setLoading(true);
+    saveHistory(id, setLoading);
     setData(data);
   };
 
   const handleDelete = () => {
-    console.log(selectedId);
-    deleteHistory(selectedId);
+    setLoading(true);
+    deleteHistory(selectedId, setLoading);
     setData(data);
     setModalVisible(!modalVisible);
   };
@@ -69,60 +72,67 @@ export const History = () => {
           </View>
         </View>
       </Modal>
-      <FlatList
-        style={styles.root}
-        data={data}
-        ItemSeparatorComponent={() => {
-          return <View style={styles.separator} />;
-        }}
-        renderItem={(item) => {
-          const Item = item.item;
-          return (
-            <View style={styles.container}>
-              <TouchableOpacity onPress={() => {}}>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: "https://cdn-icons-png.flaticon.com/512/2961/2961948.png",
-                  }}
-                />
-              </TouchableOpacity>
-              <View style={styles.content}>
-                <View style={styles.contentHeader}>
-                  <Text style={styles.name}>Đại Học Bách Khoa</Text>
-                  <Text style={styles.time}>
-                    {moment(new Date(Item.timeScan)).format("HH:mm DD/MM/YYYY")}
-                  </Text>
-                </View>
-                <View style={styles.contentHeader}>
-                  <Text style={styles.description}>{Item.name}</Text>
-                  <TouchableOpacity onPress={() => handleSave(Item.id)}>
-                    {Item.isSaving ? (
-                      <AntDesign name="heart" size={25} color="red" />
-                    ) : (
-                      <AntDesign name="hearto" size={25} color="black" />
-                    )}
-                  </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setModalVisible(true);
-                      setSelectedId(Item.id);
+      {loading ? (
+        <LoadingAPI />
+      ) : (
+        <FlatList
+          style={styles.root}
+          data={data}
+          ItemSeparatorComponent={() => {
+            return <View style={styles.separator} />;
+          }}
+          renderItem={(item) => {
+            const Item = item.item;
+            return (
+              <View style={styles.container}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: "https://cdn-icons-png.flaticon.com/512/2961/2961948.png",
                     }}
-                  >
-                    <Image
-                      style={styles.imagev2}
-                      source={{
-                        uri: "https://cdn-icons-png.flaticon.com/512/3405/3405244.png",
+                  />
+                </TouchableOpacity>
+                <View style={styles.content}>
+                  <View style={styles.contentHeader}>
+                    <Text style={styles.name}>Đại Học Bách Khoa</Text>
+                    <Text style={styles.time}>
+                      {moment(new Date(Item.timeScan)).format(
+                        "HH:mm DD/MM/YYYY"
+                      )}
+                    </Text>
+                  </View>
+                  <View style={styles.contentHeader}>
+                    <Text style={styles.description}>{Item.name}</Text>
+                    <TouchableOpacity onPress={() => handleSave(Item.id)}>
+                      {Item.isSaving ? (
+                        <AntDesign name="heart" size={25} color="red" />
+                      ) : (
+                        <AntDesign name="hearto" size={25} color="black" />
+                      )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        setModalVisible(true);
+                        setSelectedId(Item.id);
                       }}
-                    />
-                  </TouchableOpacity>
+                    >
+                      <Image
+                        style={styles.imagev2}
+                        source={{
+                          uri: "https://cdn-icons-png.flaticon.com/512/3405/3405244.png",
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          );
-        }}
-      />
+            );
+          }}
+        />
+      )}
     </>
   );
 };

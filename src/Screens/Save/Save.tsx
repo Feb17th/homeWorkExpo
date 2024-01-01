@@ -6,98 +6,75 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Pressable,
-  Modal,
-  Alert,
 } from "react-native";
-import { getSaved } from "@/Api";
+import { getSaved, saveHistory } from "@/Api";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
+import LoadingAPI from "@/Components/Loading";
 
 export const Save = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-
   const [data, setData] = useState([] as any[]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getSaved(setData);
+    setLoading(true);
+    getSaved(setData, setLoading);
   }, [data]);
+
+  const handleSave = (id: number) => {
+    setLoading(true);
+    saveHistory(id, setLoading);
+    setData(data);
+  };
 
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Do you want to delete this location?
-            </Text>
-            <View style={styles.contentHeaderV2}>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textCancel}>Cancel</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonOk]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textOk}>Save</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <FlatList
-        style={styles.root}
-        data={data}
-        ItemSeparatorComponent={() => {
-          return <View style={styles.separator} />;
-        }}
-        renderItem={(item) => {
-          const Item = item.item;
-          return (
-            <View style={styles.container}>
-              <TouchableOpacity onPress={() => {}}>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: "https://cdn-icons-png.flaticon.com/512/2961/2961948.png",
-                  }}
-                />
-              </TouchableOpacity>
-              <View style={styles.content}>
-                <View style={styles.contentHeader}>
-                  <Text style={styles.name}>Đại Học Bách Khoa</Text>
-                  <Text style={styles.time}>
-                    {moment(new Date(Item.timeScan)).format("HH:mm DD/MM/YYYY")}
-                  </Text>
-                </View>
-                <View style={styles.contentHeader}>
-                  <Text style={styles.description}>{Item.name}</Text>
-
-                  <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Image
-                      style={styles.imagev2}
-                      source={{
-                        uri: "https://cdn-icons-png.flaticon.com/512/3405/3405244.png",
-                      }}
-                    />
-                  </TouchableOpacity>
+      {loading ? (
+        <LoadingAPI />
+      ) : (
+        <FlatList
+          style={styles.root}
+          data={data}
+          ItemSeparatorComponent={() => {
+            return <View style={styles.separator} />;
+          }}
+          renderItem={(item) => {
+            const Item = item.item;
+            return (
+              <View style={styles.container}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: "https://cdn-icons-png.flaticon.com/512/2961/2961948.png",
+                    }}
+                  />
+                </TouchableOpacity>
+                <View style={styles.content}>
+                  <View style={styles.contentHeader}>
+                    <Text style={styles.name}>Đại Học Bách Khoa</Text>
+                    <Text style={styles.time}>
+                      {moment(new Date(Item.timeScan)).format(
+                        "HH:mm DD/MM/YYYY"
+                      )}
+                    </Text>
+                  </View>
+                  <View style={styles.contentHeader}>
+                    <Text style={styles.description}>{Item.name}</Text>
+                    <TouchableOpacity onPress={() => handleSave(Item.id)}>
+                      {Item.isSaving ? (
+                        <AntDesign name="heart" size={25} color="red" />
+                      ) : (
+                        <AntDesign name="hearto" size={25} color="black" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          );
-        }}
-      />
+            );
+          }}
+        />
+      )}
     </>
   );
 };
