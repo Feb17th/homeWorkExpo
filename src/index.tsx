@@ -16,7 +16,7 @@ i18n.enableFallback = true;
 i18n.defaultLocale = Language.ENGLISH;
 
 const AppWrapper = () => {
-  const isSwitchOn = useSelector((state) => state.switch.isSwitchOn);
+  const isSwitchOn = useSelector((state: any) => state.switch.isSwitchOn);
 
   return (
     <PaperProvider theme={isSwitchOn === true ? DarkTheme : LightTheme}>

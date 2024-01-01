@@ -62,6 +62,78 @@ export const GetLocationById = async (id: string) => {
   })
 }
 
+
+export const getHistory = async (setData : any) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${URL_BE}/history`,
+         headers: {
+           Authorization: `Bearer ${token}`,
+       },
+    });
+    setData(response.data?.listContent)
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const saveHistory = async (id: number) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${URL_BE}/history/star/${id}`,
+         headers: {
+           Authorization: `Bearer ${token}`,
+       },
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const deleteHistory = async (id: number | undefined) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  try {
+    const response = await axios({
+      method: 'delete',
+      url: `${URL_BE}/history/${id}`,
+         headers: {
+           Authorization: `Bearer ${token}`,
+       },
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const getSaved = async (setData : any) => {
+  const token = (await AsyncStorage.getItem('access_token')) || undefined
+
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${URL_BE}/history/star`,
+         headers: {
+           Authorization: `Bearer ${token}`,
+       },
+    });
+    setData(response.data?.listContent)
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
 // export const GetLocationById = async (id: string) => {
 //   console.log('kiem tra id location', id)
 //   // console.log("den day roif nef");
