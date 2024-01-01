@@ -16,6 +16,12 @@ export interface infoUserType {
   phoneNumber?: string
 }
 
+export interface infoPasswordType {
+  currentPassword?: string
+  newPassword?: string
+  confirmNewPassword?: string
+}
+
 export interface dataLocationType {
   description: string
   image: string

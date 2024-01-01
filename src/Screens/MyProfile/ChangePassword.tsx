@@ -1,36 +1,67 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Avatar } from "native-base";
-import { Input, Icon, Pressable, Button } from "native-base";
-import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { RootScreens } from "@/Screens";
-import { RootStackParamList } from "@/Navigation";
-import { StackNavigationProp } from "@react-navigation/stack";
+import React from 'react'
+import { View, Text } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Input, Icon, Pressable, Button } from 'native-base'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { RootScreens } from '@/Screens'
+import { RootStackParamList } from '@/Navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { ChangePassword as ChangePasswordAPI } from '@/Api'
+import { infoPasswordType } from '@/type'
 
 export const ChangePassword = () => {
-  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const [show, setShow] = React.useState(false);
-  const [show1, setShow1] = React.useState(false);
-  const [show2, setShow2] = React.useState(false);
+  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const [show, setShow] = React.useState(false)
+  const [show1, setShow1] = React.useState(false)
+  const [show2, setShow2] = React.useState(false)
+  const [infoPassword, setInfoPassword] = React.useState<infoPasswordType>({
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: ''
+  })
+
+  const handleChangePassword = async () => {
+    try {
+      const res = await ChangePasswordAPI(infoPassword)
+      if (res.status === 200) {
+        alert('Thay đổi mật khẩu thành công')
+        navigate('Settings')
+      }
+    } catch (err) {
+      if (err.response.status === 400) {
+        if (err.response.data.message === 'No overlap') {
+          alert('Xác nhận mật khẩu không trùng nhau')
+        } else if (
+          err.response.data.message === 'The current password is incorrect'
+        ) {
+          alert('Mật khẩu hiện tại không chính xác')
+        }
+      } else if (err.response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn')
+        navigate(RootScreens.LOGIN)
+      } else if (err.response.status === 404) {
+        alert('Đã có lỗi xảy ra')
+      }
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: "#fff", flex: 1 }}>
+      <View style={{ backgroundColor: '#fff', flex: 1 }}>
         <View
           style={{
-            height: 160,
-            backgroundColor: "#6DB5CA",
+            height: 70,
+            backgroundColor: '#6DB5CA'
           }}
         >
           <View
             style={{
-              position: "absolute",
-              flexDirection: "row",
-              alignItems: "center",
+              position: 'absolute',
+              flexDirection: 'row',
+              alignItems: 'center',
               top: 20,
               left: 10,
-              gap: 8,
+              gap: 8
             }}
           >
             <Ionicons
@@ -38,45 +69,33 @@ export const ChangePassword = () => {
               size={25}
               color="#fff"
               onPress={() => {
-                navigate("Settings");
+                navigate('Settings')
               }}
             />
-            <Text style={{ color: "#fff", fontSize: 20 }}>
+            <Text style={{ color: '#fff', fontSize: 20 }}>
               Thay đổi mật khẩu
             </Text>
           </View>
-
-          <View style={{ alignItems: "center", gap: 10 }}>
-            <Avatar
-              bg="green.500"
-              mr="1"
-              width={140}
-              height={140}
-              source={{
-                uri: "https://www.facebook.com/photo/?fbid=1691380308038966&set=a.112553472588332",
-              }}
-              style={{ marginTop: 90 }}
-            >
-              RS
-            </Avatar>
-          </View>
         </View>
-        <View style={{ paddingHorizontal: 20, marginTop: 120, gap: 20 }}>
+        <View style={{ paddingHorizontal: 20, marginTop: 30, gap: 20 }}>
           <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: "bold" }}>Mật khẩu hiện tại</Text>
+            <Text style={{ fontWeight: 'bold' }}>Mật khẩu hiện tại</Text>
             <Input
+              onChangeText={(value) =>
+                setInfoPassword({ ...infoPassword, currentPassword: value })
+              }
               size="md"
               w={{
-                base: "100%",
-                md: "25%",
+                base: '100%',
+                md: '25%'
               }}
-              type={show ? "text" : "password"}
+              type={show ? 'text' : 'password'}
               InputRightElement={
                 <Pressable onPress={() => setShow(!show)}>
                   <Icon
                     as={
                       <MaterialIcons
-                        name={show ? "visibility" : "visibility-off"}
+                        name={show ? 'visibility' : 'visibility-off'}
                       />
                     }
                     size={5}
@@ -90,20 +109,23 @@ export const ChangePassword = () => {
             />
           </View>
           <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: "bold" }}>Mật khẩu mới</Text>
+            <Text style={{ fontWeight: 'bold' }}>Mật khẩu mới</Text>
             <Input
+              onChangeText={(value) =>
+                setInfoPassword({ ...infoPassword, newPassword: value })
+              }
               size="md"
               w={{
-                base: "100%",
-                md: "25%",
+                base: '100%',
+                md: '25%'
               }}
-              type={show1 ? "text" : "password"}
+              type={show1 ? 'text' : 'password'}
               InputRightElement={
                 <Pressable onPress={() => setShow1(!show1)}>
                   <Icon
                     as={
                       <MaterialIcons
-                        name={show1 ? "visibility" : "visibility-off"}
+                        name={show1 ? 'visibility' : 'visibility-off'}
                       />
                     }
                     size={5}
@@ -117,20 +139,23 @@ export const ChangePassword = () => {
             />
           </View>
           <View style={{ gap: 8 }}>
-            <Text style={{ fontWeight: "bold" }}>Xác nhận mật khẩu</Text>
+            <Text style={{ fontWeight: 'bold' }}>Xác nhận mật khẩu</Text>
             <Input
+              onChangeText={(value) =>
+                setInfoPassword({ ...infoPassword, confirmNewPassword: value })
+              }
               size="md"
               w={{
-                base: "100%",
-                md: "25%",
+                base: '100%',
+                md: '25%'
               }}
-              type={show2 ? "text" : "password"}
+              type={show2 ? 'text' : 'password'}
               InputRightElement={
                 <Pressable onPress={() => setShow2(!show2)}>
                   <Icon
                     as={
                       <MaterialIcons
-                        name={show2 ? "visibility" : "visibility-off"}
+                        name={show2 ? 'visibility' : 'visibility-off'}
                       />
                     }
                     size={5}
@@ -144,11 +169,23 @@ export const ChangePassword = () => {
             />
           </View>
           <View>
-            <View style={{ flexDirection: "row", gap: 20 }}>
-              <Button size="md" colorScheme="secondary" style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', gap: 20 }}>
+              <Button
+                size="md"
+                colorScheme="secondary"
+                style={{ flex: 1 }}
+                onPress={() => {
+                  navigate('Settings')
+                }}
+              >
                 Hủy
               </Button>
-              <Button size="md" colorScheme="secondary" style={{ flex: 1 }}>
+              <Button
+                size="md"
+                colorScheme="secondary"
+                style={{ flex: 1 }}
+                onPress={handleChangePassword}
+              >
                 Cập nhật
               </Button>
             </View>
@@ -156,5 +193,5 @@ export const ChangePassword = () => {
         </View>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}

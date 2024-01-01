@@ -1,38 +1,72 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useTheme, Divider, Switch } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { FontSize } from "@/Theme/Variables";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "@/Navigation";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootScreens } from "@/Screens";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleSwitch } from "@/Store/reducers/switch";
+import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { useTheme, Divider, Switch } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { FontSize } from '@/Theme/Variables'
+import { useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from '@/Navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootScreens } from '@/Screens'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleSwitch } from '@/Store/reducers/switch'
+import { CommonActions } from '@react-navigation/native'
+import { infoUserType } from '@/type'
+import { GetOneUser } from '@/Api'
 
 export const Settings = () => {
-  const theme = useTheme();
+  const theme = useTheme()
 
-  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const navigation = useNavigation()
 
   const styles = StyleSheet.create({
     itemSetting: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
     },
     textColor: {
-      color: theme.colors.textSettings,
-    },
-  });
+      color: theme.colors.textSettings
+    }
+  })
+  const [info, setInfo] = React.useState<infoUserType>({})
 
-  const dispatch = useDispatch();
-  const isSwitchOn = useSelector((state) => state.switch.isSwitchOn);
+  const loadUser = async () => {
+    try {
+      const res = await GetOneUser()
+      setInfo(res.data)
+    } catch (err) {
+      if (err.response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn')
+        navigate(RootScreens.LOGIN)
+      }
+    }
+  }
+  React.useEffect(() => {
+    loadUser()
+  }, [])
+
+  const dispatch = useDispatch()
+  const isSwitchOn = useSelector((state) => state.switch.isSwitchOn)
 
   const onToggleSwitch = () => {
-    dispatch(toggleSwitch());
-  };
+    dispatch(toggleSwitch())
+  }
+
+  const handleEditProfile = () => {
+    navigate('MyProfile')
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'MyProfile'
+          }
+        ]
+      })
+    )
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -40,24 +74,24 @@ export const Settings = () => {
         style={{
           backgroundColor: theme.colors.settings,
           flex: 1,
-          position: "relative",
+          position: 'relative'
         }}
       >
         <View
           style={{
             height: 200,
-            backgroundColor: "#6DB5CA",
+            backgroundColor: '#6DB5CA',
             borderBottomLeftRadius: 25,
-            borderBottomRightRadius: 25,
+            borderBottomRightRadius: 25
           }}
         >
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
               gap: 10,
               paddingTop: 20,
-              paddingLeft: 20,
+              paddingLeft: 20
             }}
           >
             <Ionicons
@@ -68,8 +102,8 @@ export const Settings = () => {
             <Text
               style={{
                 fontSize: FontSize.TITLE,
-                color: "#fff",
-                fontWeight: "bold",
+                color: '#fff',
+                fontWeight: 'bold'
               }}
             >
               Cài đặt
@@ -78,27 +112,27 @@ export const Settings = () => {
         </View>
         <View
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 100,
             left: 20,
             right: 20,
-            bottom: 0,
+            bottom: -20,
             backgroundColor: theme.colors.settings,
             gap: 20,
             paddingVertical: 20,
             paddingHorizontal: 20,
             elevation: 5,
-            borderRadius: 15,
+            borderRadius: 15
           }}
         >
-          <Text style={styles.textColor}>Icetea1702</Text>
+          <Text style={styles.textColor}>{info.name}</Text>
           <Divider />
           <View>
-            <Text style={{ color: "#ADADAD" }}>Cài đặt tài khoản</Text>
+            <Text style={{ color: '#ADADAD' }}>Cài đặt tài khoản</Text>
           </View>
           <TouchableOpacity
             style={styles.itemSetting}
-            onPress={() => navigate("MyProfile")}
+            onPress={handleEditProfile}
           >
             <Text style={styles.textColor}>Chỉnh sửa thông tin cá nhân </Text>
             <MaterialIcons
@@ -109,7 +143,7 @@ export const Settings = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.itemSetting}
-            onPress={() => navigate("ChangePassword")}
+            onPress={() => navigate('ChangePassword')}
           >
             <Text style={styles.textColor}>Thay đổi mật khẩu</Text>
             <MaterialIcons
@@ -132,7 +166,7 @@ export const Settings = () => {
           </View>
           <Divider />
           <View>
-            <Text style={{ color: "#ADADAD" }}>Chung</Text>
+            <Text style={{ color: '#ADADAD' }}>Chung</Text>
           </View>
           <View style={styles.itemSetting}>
             <Text style={styles.textColor}>Về chúng tôi</Text>
@@ -153,7 +187,7 @@ export const Settings = () => {
           <TouchableOpacity
             style={styles.itemSetting}
             onPress={() => {
-              navigate(RootScreens.LOGIN);
+              navigate(RootScreens.LOGIN)
             }}
           >
             <Text style={styles.textColor}>Đăng xuất</Text>
@@ -166,5 +200,5 @@ export const Settings = () => {
         </View>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
