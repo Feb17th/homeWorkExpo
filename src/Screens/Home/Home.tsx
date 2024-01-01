@@ -40,8 +40,12 @@ export const Home = () => {
   const handleBarCodeScanned = async ({ data }: { data: any }) => {
     console.log('data handle Scan Qr code', data)
     setScannedData(data)
+    requestAPI(data)
+  }
+
+  const requestAPI = async (id : string) => {
     try {
-      const res = await GetLocationById(data)
+      const res = await GetLocationById(id)
 
       console.log('res: ', res?.data)
       navigate(RootScreens.DATA_LOCATION, { data: res?.data })
@@ -83,6 +87,8 @@ export const Home = () => {
         // Handle result data
         console.log('data sau khi chọn ảnh', decodedBarcodeImage)
         setScannedData(decodedBarcodeImage[0].data)
+        requestAPI(decodedBarcodeImage[0].data);
+
       } else {
         // Handle canceled result
         console.log('You did not select any image.')

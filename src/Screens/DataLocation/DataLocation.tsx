@@ -23,7 +23,7 @@ export const DataLocation = ({ route }: DataLocationScreenProp) => {
     <View style={styles.container}>
       <View style={styles.containerContent}>
         <Text style={styles.headerName}>{dataLocation.name}</Text>
-        <Image source={{ uri: urlImage }} style={styles.image} />
+        <Image source={{ uri: dataLocation.image }} style={styles.image} />
         <Text
           style={{
             fontSize: FontSize.REGULAR,

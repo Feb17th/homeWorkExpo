@@ -19,8 +19,8 @@ export const Save = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setData([])
       setLoading(true);
+      setData([])
       getSaved(setData, setLoading);
     }, [])
   );
