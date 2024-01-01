@@ -77,7 +77,7 @@ export const GetLocationById = async (id: string) => {
 }
 
 
-export const getHistory = async (setData : any) => {
+export const getHistory = async (setData : any, setLoading:any) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -89,13 +89,16 @@ export const getHistory = async (setData : any) => {
        },
     });
     setData(response.data?.listContent)
+    setLoading(false)
     return response.data;
   } catch (e) {
-    console.log(e)
+    console.log(e)   
+     setLoading(false)
+
   }
 }
 
-export const saveHistory = async (id: number, setLoading: any) => {
+export const saveHistory = async (id: number) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -106,15 +109,13 @@ export const saveHistory = async (id: number, setLoading: any) => {
            Authorization: `Bearer ${token}`,
        },
     });
-    setLoading(false)
     return response.data;
   } catch (e) {
     console.log(e)
-    setLoading(false)
   }
 }
 
-export const deleteHistory = async (id: number | undefined, setLoading: any) => {
+export const deleteHistory = async (id: number | undefined) => {
   const token = (await AsyncStorage.getItem('access_token')) || undefined
 
   try {
@@ -125,11 +126,9 @@ export const deleteHistory = async (id: number | undefined, setLoading: any) => 
            Authorization: `Bearer ${token}`,
        },
     });
-    setLoading(false)
     return response.data;
   } catch (e) {
     console.log(e)    
-    setLoading(false)
   }
 }
 
