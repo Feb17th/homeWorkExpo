@@ -116,14 +116,14 @@ const slides = [
     title: "Chào mừng đến với QR Find Place",
     description:
       "Ứng dụng này được phát triển bởi sinh viên trường đại học Bách Khoa",
-    image: require("../../Images/onboarding1.png"),
+    image: require("../../../assets/onboarding1.png"),
   },
   {
     id: 2,
     title: "Chức năng chính của ứng dụng",
     description:
       "Bạn có thể quét mã QR để biết thêm thông tin chi tiết của nơi bạn đang đứng.",
-    image: require("../../Images/onboarding2.png"),
+    image: require("../../../assets/onboarding2.png"),
   },
 ];
 
